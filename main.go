@@ -23,9 +23,11 @@ var (
 
 func main() {
 
+	start := time.Now()
 	wg.Add(MAXSIZE)
 	ctx := context.Background()
-	ctx2, cancel := context.WithTimeout(ctx, 2*time.Second)
+	ctx2, cancel := context.WithTimeout(ctx, 200*time.Second)
+	//ctx2, cancel := context.WithCancel(ctx)
 	defer cancel()
 	for i := 0; i < MAXSIZE; i++ {
 		go func() {
@@ -34,13 +36,14 @@ func main() {
 		}()
 	}
 	wg.Wait()
+	log.Println(time.Since(start))
 }
 
 func login(ctx context.Context, v interface{}) (result interface{}) {
 	//TODO
 	defer wg.Done()
 	//log.Println(v)
-	time.Sleep(1 * time.Second)
+	time.Sleep(time.Millisecond)
 	select {
 	case <-ctx.Done():
 		//log.Println(ctx.Err())
